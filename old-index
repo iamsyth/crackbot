@@ -1,0 +1,183 @@
+var tmi = require("tmi.js")
+var variables = require("./var.json")
+const auth = require("./commands/auth.json");
+const fs = require('fs')
+var $ = jQuery = require('jquery')
+var http = require('http');
+const prefix = "!"
+const BOT_USERNAME = auth.BOT_USERNAME
+const OAUTH_TOKEN = auth.OAUTH_TOKEN
+const CHANNEL_NAME = auth.CHANNEL_NAME
+var isPollRunning = false;
+var messagesCount = 0;
+var maxMessages = 15;
+var setupLink = "https://dicerandom.github.io/crackbot/items/setup.json"
+var loadedFile;
+
+setInterval(reset, 1000 * 35);
+
+
+var config = {
+    options: {
+        debug: true
+    },
+    connection: {
+        cluster: "aws",
+        reconnect: true
+    },
+    identity: {
+        username: BOT_USERNAME,
+        // get yours at http://twitchapps.com/tmi
+        password: OAUTH_TOKEN
+    },
+    channels: [CHANNEL_NAME]
+}
+
+var client = new tmi.client(config)
+client.connect();
+
+
+client.on("connected", (address, port) => {
+    console.log("The bot has connected on" + address + ":" + port);
+})
+
+client.on("chat", (channel, user, message, self) => {
+    if (self) return;
+
+    message = message.toLowerCase();
+    const chat = message.substring(prefix.length).split(' ');
+
+    switch (message) {
+        case "hi bot":
+            if (user.badges.broadcaster == 1) {   // CHECK IF USER IS THE BROADCASTER
+                client.say(channel, "Hi bud!")
+            }
+            break;
+		case "stfu":
+                var output = Math.floor(Math.random() * Math.floor(8));
+                console.log(output);
+                if (output == 5) {
+                    client.say(channel, "no u")
+                }
+                break;
+    }
+
+
+    if (message.startsWith(prefix) && messagesCount < maxMessages) {
+        console.log("[" + chat[0] + "]")
+        switch (chat[0]) {  //prefixCOMMAND 
+			case "drill":
+                client.say(channel, "brrrrrrrrrrrrrrrrr uwu") //FUTURE: Add a link to commands
+				addToMessageCount();
+                break;
+			case "ez":
+				client.say(channel, "EZ") //FUTURE: Add a link to commands
+				addToMessageCount();
+                break;
+			case "discord":
+				client.say(channel, "@"+user.username+" Michael's Discord: https://discord.com/invite/52eBvyZ. ")
+				addToMessageCount();
+				break;
+			case "reddit":
+				client.say(channel, "@"+user.username+" Michael's subreddit can be found here: https://www.reddit.com/r/MichaelReeves/")
+				addToMessageCount();
+				break;
+			case "youtube":
+				client.say(channel, "@"+user.username+" Michael's Youtube Channel can be found here: https://www.youtube.com/channel/UCtHaxi4GTYDpJgMSGy7AeSw")
+				addToMessageCount();
+                break;
+            case "setup":
+                client.say(channel, "@"+user.username+" Michael's Setup can be found here: https://dicerandom.github.io/crackbot/setup/index.html")
+                addToMessageCount();
+                break;
+            case "specs":
+                client.say(channel, "@"+user.username+" Michael's Setup can be found here: https://dicerandom.github.io/crackbot/setup/index.html")
+                addToMessageCount();
+                break;
+			case "twitter":
+				client.say(channel, "@"+user.username+" Michael's Twitter can be found here: https://twitter.com/michaelreeves")
+				addToMessageCount();
+				break;
+			case "stinky":
+				client.say(channel, "uh oh. stinky.")
+				addToMessageCount();
+				break;
+			case "poopy":
+				client.say(channel, "uh oh. poopy.")
+				addToMessageCount();
+                break;
+            case "pepepls":
+                client.say(channel, "PepePls")
+				addToMessageCount();
+                break;
+			case "commands":
+				client.say(channel, "@"+user.username+" The commands are listed at: https://dicerandom.github.io/crackbot/")
+				addToMessageCount();
+				break;
+            case "buycrack":
+                if (variables.numberOfTaps == null) { // If it doesn't exist
+                    variables.numberOfTaps = 0;
+                }
+                variables.numberOfTaps++;
+                client.say(channel, "People have bought " + variables.numberOfTaps + " grams of crack so far.")
+                console.log(user);
+				addToMessageCount();
+                break;
+            default:
+                break;
+        }
+    } else {
+        //console.log(chat[0])
+    }
+});
+
+
+
+function saveJson() {
+    fs.writeFileSync("./var.json", JSON.stringify(variables));
+}
+
+
+process.stdin.resume();//so the program will not close instantly
+
+function exitHandler(options, exitCode) {
+    if (options.cleanup) console.log('clean');
+    if (exitCode || exitCode === 0) console.log(exitCode);
+    if (options.exit) {
+        saveJson();
+        process.exit();
+    }
+}
+
+
+function reset(){
+	messagesCount = 0;
+    console.log("RESET");
+    saveJson();
+}
+
+function addToMessageCount(){
+	messagesCount++;
+	console.log("Message sent: "+messagesCount);
+}
+
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+        currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+}
+
+//do something when app is closing
+process.on('exit', exitHandler.bind(null, { cleanup: true }));
+
+//catches ctrl+c event
+process.on('SIGINT', exitHandler.bind(null, { exit: true }));
+
+// catches "kill pid" (for example: nodemon restart)
+process.on('SIGUSR1', exitHandler.bind(null, { exit: true }));
+process.on('SIGUSR2', exitHandler.bind(null, { exit: true }));
+
+//catches uncaught exceptions
+process.on('uncaughtException', exitHandler.bind(null, { exit: true }));s
