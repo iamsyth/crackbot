@@ -1,0 +1,61 @@
+<style>
+	.page-footer{
+		position: absolute;
+		bottom: 0px;
+		text-align: center;
+		width: 100%;
+	}
+</style>
+
+<!-- CSS only -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+<!-- JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+<title>CrackBot Commands</title>
+
+<div style="text-align: center; ">
+<h1 id="title">Setup</h1>
+
+<div id="setup">
+    <p style="display: inline;">CPU - </p><p style="display: inline;">INTEL CORE NIGHTMARE </p>
+    <p></p>
+    <p style="display: inline;">GPU - </p><p style="display: inline;">NVIDIA RTX CRACK </p>
+</div>
+
+
+<footer class="page-footer"> Created by <a href="https://linktr.ee/rdice">Dice</a></footer>
+
+
+
+<script>
+    function loadFile(filePath) {
+        var result = null;
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", filePath, false);
+        xmlhttp.send();
+        if (xmlhttp.status == 200) {
+            result = xmlhttp.responseText;
+        }
+        return result;
+    }
+
+    var loadedFile = JSON.parse(loadFile("https://dicerandom.github.io/crackbot/items/setup.json"));
+
+    if(loadedFile.HasSetup == "false"){
+        console.log("No Setup");
+        noSetup();
+    }
+
+
+    function noSetup(){
+        var title = document.getElementById("title");
+        var setup = document.getElementById("setup");
+        setup.hidden = true;
+        title.innerHTML = "We are waiting for Nicheal to reveal his setup."
+    }
+
+</script>
